@@ -14,3 +14,7 @@ outputs/
 # OS clutter
 .DS_Store
 Thumbs.db
+
+data_dictionary*.csv
+data_dictionary*.xlsx
+
