@@ -5,6 +5,8 @@
 set.seed(1996)
 N_syn <- 100000
 
+hse_baseline_11_17_clean <- readRDS("data/hse_baseline_11_17_clean.rds")
+
 # 1) Base sample for synthetic population (clean baseline, valid weights)
 base_for_syn <- hse_baseline_11_17_clean |>
   filter(!is.na(wt_int) & wt_int > 0) |> # only keep ppl with +ve weights
@@ -72,3 +74,5 @@ prop.table(table(syn_11_17_n100k$cig_status))
 # E-cigarette status (note the NA share should be similar)
 prop.table(table(base_for_syn$eciguse_19, useNA = "ifany"))
 prop.table(table(syn_11_17_n100k$eciguse_19, useNA = "ifany"))
+
+saveRDS(syn_11_17_n100k, "data/syn_11_17_n100k.rds")

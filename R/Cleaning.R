@@ -135,37 +135,3 @@ count(hse_baseline_11_17_clean, qimd19, sort = TRUE)
 # Save clean baseline dataset (recommended: build everything downstream from this file)
 dir.create("data", showWarnings = FALSE)
 saveRDS(hse_baseline_11_17_clean, "data/hse_baseline_11_17_clean.rds")
-
-# ---- 5) Microsimulation age initialisation (age in months) ----------------------
-
-# We only have age bands (age35g), so we sample a plausible exact age within each band.
-# For the 16–19 band, we restrict to 16.00–17.99 to enforce an 11–17 baseline population.
-# age_months_init is the model state (used for ageing each tick).
-# age_years_check is retained ONLY for sanity checks / interpretation.
-
-set.seed(1996)  # reproducible initial ages
-
-hse_baseline_11_17_init <- hse_baseline_11_17_clean |>
-  mutate(
-    # Sample exact age in years within each age band (uniform within band)
-    age_years_init = case_when(
-      age35g == "11-12" ~ runif(n(), min = 11, max = 13),  # 11.00–12.99
-      age35g == "13-15" ~ runif(n(), min = 13, max = 16),  # 13.00–15.99
-      age35g == "16-19" ~ runif(n(), min = 16, max = 18),  # 16.00–17.99 only
-      TRUE ~ NA_real_
-    ),
-    
-    # Convert to whole months (this is what the model actually uses)
-    age_months_init = floor(age_years_init * 12),
-    
-    # One human-readable check variable (optional to keep long-term)
-    age_years_check = age_months_init / 12
-  ) |>
-  filter(!is.na(age_months_init))
-
-# Quick sanity checks (recommended once)
-summary(hse_baseline_11_17_init$age_years_check)
-range(hse_baseline_11_17_init$age_years_check)
-
-# Save baseline + initialised age (use this as the model starting population)
-saveRDS(hse_baseline_11_17_init, "data/hse_baseline_11_17_init.rds")
