@@ -14,9 +14,9 @@ The model covers both combustible tobacco and e-cigarette use. It is intended to
 
 Scripts are stored in the R folder. The project currently includes:
 
-- 01_clean_hse2022.R: cleaning and preparing HSE 2022 survey data
-- 02_make_synth_pop.R: constructing a synthetic population
-- 03_add_monthly_ticks.R: adding a monthly time structure and producing intermediate outputs
+- 01_
+- 02_
+- 03_
 
 Additional scripts and documentation will be added as the policy simulation components are developed.
 
@@ -35,9 +35,9 @@ Note: restricted or licensed survey microdata are intentionally excluded from ve
 
 Open the RStudio project file and run the scripts in order:
 
-1. R/01_clean_hse2022.R
-2. R/02_make_synth_pop.R
-3. R/03_add_monthly_ticks.R
+1. R/01
+2. R/02
+3. R/03
 
 ## Status
 
