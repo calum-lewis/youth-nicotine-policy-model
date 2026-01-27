@@ -156,4 +156,4 @@ hse_baseline_11_17_clean <- hse_baseline_11_17_clean |>
 count(hse_baseline_11_17_clean, age35g, education_status)
 
 # Save clean baseline dataset
-saveRDS(hse_baseline_11_17_clean, "data_clean/hse_baseline_11_17_clean.rds")
+saveRDS(hse_baseline_11_17_clean, "data/hse_baseline_11_17_clean.rds")

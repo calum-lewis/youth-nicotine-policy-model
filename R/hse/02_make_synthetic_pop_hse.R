@@ -1,11 +1,13 @@
 ################################################################################
 # SYNTHETIC POPULATION (restart): Age-band constrained weighted resampling
 ################################################################################
+library(dplyr)
+library(forcats)
 
 set.seed(1996)
 N_syn <- 100000
 
-hse_baseline_11_17_clean <- readRDS("data_clean/hse_baseline_11_17_clean.rds")
+hse_baseline_11_17_clean <- readRDS("data/hse_baseline_11_17_clean.rds")
 
 # 1) Base sample for synthetic population (clean baseline, valid weights)
 base_for_syn <- hse_baseline_11_17_clean |>
@@ -21,6 +23,18 @@ targets_age <- base_for_syn |>
   )
 
 targets_age  # <-- print this; should be 3 rows only
+
+# Fix rounding so totals sum exactly to N_syn
+targets_age <- targets_age |>
+  mutate(N_band = as.integer(N_band))
+
+diff_n <- N_syn - sum(targets_age$N_band)
+if (diff_n != 0) {
+  # add/subtract the remainder to the largest band
+  i <- which.max(targets_age$N_band)
+  targets_age$N_band[i] <- targets_age$N_band[i] + diff_n
+}
+stopifnot(sum(targets_age$N_band) == N_syn)
 
 # 3) Sample within each age band, using wt_int as selection weights
 syn_11_17_n100k <- bind_rows(
