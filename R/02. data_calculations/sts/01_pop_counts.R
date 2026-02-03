@@ -17,7 +17,6 @@ library(readr)
 clean_path <- "U:/Modelling/R Project/data/data_clean/sts_16_17_clean.rds"
 
 # Outputs (adjust if you like)
-out_counts_csv <- "U:/Modelling/R Project/outputs/sts_counts_by_year_16_17_2022_2025.csv"
 out_baseline_rds <- "U:/Modelling/R Project/data/data_clean/sts_16_17_baseline_2022_2025.rds"
 
 # ---- 1) Load clean data -------------------------------------------------------
@@ -86,5 +85,4 @@ props_by_year <- counts_by_year %>%
 props_by_year
 
 # ---- 5) Save outputs ----------------------------------------------------------
-write_csv(counts_by_year, out_counts_csv)
 saveRDS(sts_22_25, out_baseline_rds)

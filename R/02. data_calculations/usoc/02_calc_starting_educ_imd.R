@@ -1,7 +1,7 @@
 ################################################################################
-# 04_params_post16_init_wave_o_16_17.R
-# Estimate post-16 education/training as main activity among ages 16–17
-# from UKHLS Wave o (o_indresp), using o_jbstat.
+# 02
+# calc the starting levels of education and imd from usoc
+# in order to characterise our starting pop
 ################################################################################
 
 library(haven)
@@ -74,7 +74,7 @@ print(imd_start)
 
 
 
-# ---- Save parameter ------------------------------------------------------------
+# ---- Save the tables to act as starting pop characteristics ------------------------------------------------------------
 saveRDS(edu_start, "U:/Modelling/R Project/data/data_params/edu_start_eng_16_17.rds")
 
 saveRDS(imd_start, "U:/Modelling/R Project/data/data_params/imd_start_eng_16_17.rds")

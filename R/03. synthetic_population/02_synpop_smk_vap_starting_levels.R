@@ -1,5 +1,5 @@
 ################################################################################
-# 05.assign_behaviours: Assign smoking + vaping to England synthetic population
+# 02: add smoking/vaping starting levels to spine
 #
 # Inputs:
 # - Synthetic spine (England 11–17): age, sex, imd_q, ft_edu
@@ -15,6 +15,8 @@ library(dplyr)
 # ---- Settings ----------------------------------------------------------------
 set.seed(1)
 
+#ash vaping data: https://ash.org.uk/resources/view/use-of-e-cigarettes-among-young-people-in-great-britain
+#ash smoking data: https://ash.org.uk/uploads/Youth-Smoking-Fact-Sheet.pdf?v=1741882326
 
 # ASH placeholders (11–15), taken from recent ASH report
 p_smoke_11_15 <- 0.03     # current smoking
@@ -24,7 +26,7 @@ p_vape_given_smoke <- 0.49  # P(vape | current smoker), from ASH (11–17)
 # ---- Paths -------------------------------------------------------------------
 #spine built from hse and usoc
 spine_path <- "U:/Modelling/R Project/data/data_clean/syn_spine_eng_11_17_N100k.rds"
-#sts figures
+#sts figures 2022-25
 sts_baseline_path <- "U:/Modelling/R Project/data/data_clean/sts_16_17_baseline_2022_2025.rds"
 #output path
 out_path <- "U:/Modelling/R Project/data/data_clean/syn_pop_eng_11_17_N100k_with_behaviours.rds"
@@ -149,4 +151,3 @@ print(with(syn, table(smoke_now, vape_now, useNA = "ifany")))
 
 # ---- 7) Save ------------------------------------------------------------------
 saveRDS(syn, out_path)
-message("Saved synthetic population with behaviours to: ", out_path)

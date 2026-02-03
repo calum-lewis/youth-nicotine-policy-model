@@ -18,7 +18,6 @@ library(labelled)
 
 # ---- Input --------------------------------------------------------------------
 indall_l_path <- "U:/Modelling/R Project/data/data_raw/us_indall/l_indall.dta"
-# adjust path if needed
 
 # ---- 1) Read + basic cleaning --------------------------------------------------
 indall_raw <- read_dta(indall_l_path)
@@ -39,5 +38,3 @@ saveRDS(
   usoc_n_indall_clean,
   "U:/Modelling/R Project/data/data_clean/usoc_wave_l_indall_imd_clean.rds"
 )
-
-cat("\nSaved: U:/Modelling/R Project/data_clean/usoc_wave_l_indall_imd_clean.rds\n")

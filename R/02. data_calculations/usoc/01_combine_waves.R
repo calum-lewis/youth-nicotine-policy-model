@@ -54,5 +54,3 @@ saveRDS(
   usoc_lmno_panel,
   "U:/Modelling/R Project/data/data_clean/usoc_lmno_panel_with_imd.rds"
 )
-
-cat("\nSaved: U:/Modelling/R Project/data_clean/usoc_lmno_panel_with_imd.rds\n")

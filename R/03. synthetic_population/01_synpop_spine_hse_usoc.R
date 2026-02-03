@@ -121,4 +121,3 @@ cat("Age 17 P(FT=1): ", p17, "\n")
 
 # ---- 7) Save ------------------------------------------------------------------
 saveRDS(syn_spine, out_spine_rds)
-message("Saved synthetic spine to: ", out_spine_rds)

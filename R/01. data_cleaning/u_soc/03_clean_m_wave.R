@@ -27,4 +27,3 @@ usoc_m_clean <- m_raw |>
   relocate(pidp, wave, age, gender, jbstat, country)
 
 saveRDS(usoc_m_clean, "U:/Modelling/R Project/data/data_clean/usoc_wave_m_indresp_clean.rds")
-cat("\nSaved: U:/Modelling/R Project/data_clean/usoc_wave_m_indresp_clean.rds\n")

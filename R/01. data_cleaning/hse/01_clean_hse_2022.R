@@ -35,7 +35,7 @@ hse_tgt <- hse |>
 
 # ---- 3) Select variables needed for baseline modelling --------------------------
 
-# Keep *raw* items only. No harmonised status variables here.
+
 hse_2022_11_19_clean <- hse_tgt |>
   select(
     # Demographics / structure
@@ -65,7 +65,7 @@ hse_2022_11_19_clean <- hse_tgt |>
 
 
 # ---- 4) Standardise non-substantive/routing responses to NA ---------------------
-# Important: we keep "Not applicable" as NA everywhere (no "NA -> No" recodes here).
+# Important: we keep "Not applicable" as NA everywhere
 # Any interpretation of routing happens downstream in 02.data_calculations.
 
 to_na_levels <- c("Refused", "Don't know", "Not applicable")

@@ -22,7 +22,7 @@ library(janitor)
 
 # ---- Inputs -------------------------------------------------------------------
 sts_path <- "C:/Users/ecq17cdl/modelling_extra_storage/STS and ATS files Dec 25/STS and ATS files Dec 25/Latest omnibus SPSS data file/omni230_39.1_65.2cot_31.3a_25.4s_113.5s_recodes_a.sav"
-
+# didn't have enough storage for this in usual location
 # ---- 1) Read raw STS data -----------------------------------------------------
 sts_raw <- read_sav(sts_path)
 
@@ -64,12 +64,8 @@ rename(
   
   relocate(wave, year, age, sex, soc, educ, LAcode, cigsmok, allecig, weight)
 
-# ---- 5) Quick integrity checks ------------------------------------------------
-# table(sts_16_17_clean$sex, useNA = "ifany")
-# table(sts_16_17_clean$soc, useNA = "ifany")
-# table(sts_16_17_clean$educ, useNA = "ifany")
 
-# ---- 6) Save clean dataset ----------------------------------------------------
+# ---- Save clean dataset ----------------------------------------------------
 saveRDS(
   sts_16_17_clean,
   "U:/Modelling/R Project/data/data_clean/sts_16_17_clean.rds"
