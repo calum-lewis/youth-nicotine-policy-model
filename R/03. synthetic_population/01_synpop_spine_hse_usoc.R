@@ -7,31 +7,33 @@ N <- 100000
 set.seed(1)
 
 # HSE df already in memory:
-hse <- hse_2022_11_19_clean
+hse <- hse_2022_11_24_clean
 
 # Parameter tables (from your saved RDS files)
-imd_start_eng_16_17 <- readRDS("U:/Modelling/R Project/data/data_params/imd_start_eng_16_17.rds")
-edu_start_eng_16_17 <- readRDS("U:/Modelling/R Project/data/data_params/edu_start_eng_16_17.rds")
+imd_start_eng_16_24 <- readRDS("U:/Modelling/R Project/data/data_params/imd_start_eng_16_24.rds")
+edu_start_eng_16_24 <- readRDS("U:/Modelling/R Project/data/data_params/edu_start_eng_16_24.rds")
 
 # Output path
-out_spine_rds <- "U:/Modelling/R Project/data/data_clean/syn_spine_eng_11_17_N100k.rds"
+out_spine_rds <- "U:/Modelling/R Project/data/data_clean/syn_spine_eng_11_24_N100k.rds"
 
-# ---- 1) Create single-year age from age bands (abridging 16–19 to 16–17) -----
-hse_11_17 <- hse %>%
+# ---- 1) Create single-year age from age bands 
+hse_11_24 <- hse %>%
   mutate(
     age_single = case_when(
       age35g %in% c("11-12", "11–12") ~ sample(11:12, size = n(), replace = TRUE),
       age35g %in% c("13-15", "13–15") ~ sample(13:15, size = n(), replace = TRUE),
-      age35g %in% c("16-19", "16–19") ~ sample(16:17, size = n(), replace = TRUE),
+      age35g %in% c("16-19", "16–19") ~ sample(16:19, size = n(), replace = TRUE),
+      age35g %in% c("20-24", "20-24") ~ sample(20:24, size = n(), replace = TRUE), #keep to 24yo for now
+  #    age35g %in% c("25-29", "25-29") ~ sample(25:29, size = n(), replace = TRUE),
       TRUE ~ NA_integer_
     ),
     sex = as.character(sex)
   ) %>%
-  filter(age_single >= 11, age_single <= 17) %>%
+  filter(age_single >= 11, age_single <= 24) %>% #should be unneccesary
   filter(!is.na(sex), !is.na(wt_int))
 
 # ---- 2) Weighted joint distribution: age × sex --------------------------------
-age_sex_dist <- hse_11_17 %>%
+age_sex_dist <- hse_11_24 %>%
   group_by(age_single, sex) %>%
   summarise(w = sum(wt_int, na.rm = TRUE), .groups = "drop") %>%
   mutate(p = w / sum(w))
@@ -54,7 +56,7 @@ syn_spine <- age_sex_dist %>%
 
 # ---- 4) Assign IMD quintile using USoc parameter table ------------------------
 # Expecting columns: imd2019qe_dv, pct
-imd_probs_tbl <- imd_start_eng_16_17 %>%
+imd_probs_tbl <- imd_start_eng_16_24 %>%
   mutate(
     imd_q = as.character(imd2019qe_dv), #rename
     prob  = pct / sum(pct) #turn perc into prob
@@ -71,7 +73,7 @@ syn_spine$imd_q <- sample(
 
 
 # ---- 5) Add FT education/training (USoc England; placeholder rules) -----------
-ft_probs <- edu_start_eng_16_17 %>%
+ft_probs <- edu_start_eng_16_24 %>%
   mutate(
     age = as.integer(age),
     ft  = as.integer(in_ft_education_or_training_main), #rename

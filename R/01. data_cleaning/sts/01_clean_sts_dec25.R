@@ -36,38 +36,35 @@ vars_to_keep <- c(
   "qual",
   "LAcode",
   "cigsmok",
+  "smokstat",
   "allecig",
   "@weight0"
 )
 
-sts_16_17_clean <- sts_raw %>%
+sts_16_24_clean <- sts_raw %>%
   select(any_of(vars_to_keep)) %>%
-  filter(actage %in% c(16, 17)) %>%
-  
-  # ---- 3) Convert labelled vars to factors (labels preserved) -----------------
-mutate(
-  sexz  = as_factor(sexz, levels = "labels") |> fct_drop(),
-  sgz   = as_factor(sgz,  levels = "labels") |> fct_drop(),
-  qual  = as_factor(qual, levels = "labels") |> fct_drop()
-) %>%
-  
-  # ---- 4) Relabel columns (optional but recommended) --------------------------
-rename(
-  wave   = xwave,
-  year   = xyear,
-  age    = actage,
-  sex    = sexz,
-  soc    = sgz,
-  educ   = qual,
-  weight = `@weight0`
-) %>%
-  
-  relocate(wave, year, age, sex, soc, educ, LAcode, cigsmok, allecig, weight)
+  filter(actage %in% 16:25) %>%
+  mutate(
+    sexz     = haven::as_factor(sexz)     |> forcats::fct_drop(),
+    sgz      = haven::as_factor(sgz)      |> forcats::fct_drop(),
+    qual     = haven::as_factor(qual)     |> forcats::fct_drop()
+  #  smokstat = haven::as_factor(smokstat) |> forcats::fct_drop(), #this is what is used in STAPM and other UoS modelling
+  #  cigsmok  = haven::as_factor(cigsmok)  |> forcats::fct_drop()
+  ) %>%
+  rename(
+    wave   = xwave,
+    year   = xyear,
+    age    = actage,
+    sex    = sexz,
+    soc    = sgz,
+    educ   = qual,
+    weight = `@weight0`
+  ) %>%
+  relocate(wave, year, age, sex, soc, educ, LAcode, cigsmok, smokstat, allecig, weight)
 
 
 # ---- Save clean dataset ----------------------------------------------------
 saveRDS(
-  sts_16_17_clean,
-  "U:/Modelling/R Project/data/data_clean/sts_16_17_clean.rds"
+  sts_16_24_clean,
+  "U:/Modelling/R Project/data/data_clean/sts_16_24_clean.rds"
 )
-

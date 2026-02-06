@@ -25,11 +25,11 @@ p_vape_given_smoke <- 0.49  # P(vape | current smoker), from ASH (11–17)
 
 # ---- Paths -------------------------------------------------------------------
 #spine built from hse and usoc
-spine_path <- "U:/Modelling/R Project/data/data_clean/syn_spine_eng_11_17_N100k.rds"
+spine_path <- "U:/Modelling/R Project/data/data_clean/syn_spine_eng_11_24_N100k.rds"
 #sts figures 2022-25
-sts_baseline_path <- "U:/Modelling/R Project/data/data_clean/sts_16_17_baseline_2022_2025.rds"
+sts_baseline_path <- "U:/Modelling/R Project/data/data_clean/sts_16_24_baseline_2022_2025.rds"
 #output path
-out_path <- "U:/Modelling/R Project/data/data_clean/syn_pop_eng_11_17_N100k_with_behaviours.rds"
+out_path <- "U:/Modelling/R Project/data/data_clean/syn_pop_eng_11_24_N100k_with_behaviours.rds"
 
 # ---- 1) Load data -------------------------------------------------------------
 syn <- readRDS(spine_path)
@@ -100,8 +100,8 @@ syn <- syn %>%
   )
 
 # ---- 5) Assign 16–17 behaviours using STS joint distribution ------------------
-syn_16_17 <- syn %>%
-  filter(age %in% c(16, 17)) %>%
+syn_16_24 <- syn %>%
+  filter(age %in% c(16, 17, 18, 19, 20, 21, 22, 23, 24)) %>%
   mutate(
     use_state = mapply(assign_use_state, age, sex),
     smoke_now = if_else(use_state %in% c("Smoker only", "Dual"), 1L, 0L),
@@ -110,8 +110,8 @@ syn_16_17 <- syn %>%
   select(-use_state)
 
 syn <- syn %>%
-  filter(!(age %in% c(16, 17))) %>%
-  bind_rows(syn_16_17) %>%
+  filter(!(age %in% c(16, 17, 18, 19, 20, 21, 22, 23, 24))) %>%
+  bind_rows(syn_16_24) %>%
   arrange(age, sex)
 
 
@@ -127,13 +127,18 @@ syn %>%
 
 # 16–17 prevalence
 syn %>%
-  filter(age %in% c(16, 17)) %>%
+  filter(age %in% c(16, 17, 18, 19, 20, 21, 22, 23, 24)) %>%
   summarise(
     n = n(),
     smoke_prev = mean(smoke_now),
     vape_prev  = mean(vape_now),
     dual_prev  = mean(smoke_now == 1 & vape_now == 1)
   )
+
+syn$state <- ifelse(syn$smoke_now == 1 & syn$vape_now == 1, "dual",
+                    ifelse(syn$smoke_now == 1 & syn$vape_now == 0, "smoke",
+                           ifelse(syn$smoke_now == 0 & syn$vape_now == 1, "vape", 
+                                  "nonuse")))
 
 
 # ---- 6) Quick checks ----------------------------------------------------------
@@ -142,12 +147,15 @@ cat("Smoking:", round(mean(syn$smoke_now[syn$age <= 15]), 4), "\n")
 cat("Vaping: ", round(mean(syn$vape_now[syn$age <= 15]), 4), "\n")
 cat("Calibrated P(vape | non-smoker) 11–15:", round(p_vape_given_nonsmoke, 4), "\n")
 
-cat("\n--- 16–17 prevalence (synthetic) ---\n")
-print(with(syn %>% filter(age %in% c(16, 17)), tapply(smoke_now, age, mean)))
-print(with(syn %>% filter(age %in% c(16, 17)), tapply(vape_now, age, mean)))
+cat("\n--- 16–24 prevalence (synthetic) ---\n")
+print(with(syn %>% filter(age %in% c(16, 17, 18, 19, 20, 21, 22, 23, 24)), tapply(smoke_now, age, mean)))
+print(with(syn %>% filter(age %in% c(16, 17, 18, 19, 20, 21, 22, 23, 24)), tapply(vape_now, age, mean)))
 
-cat("\n--- Smoke x Vape (all 11–17) ---\n")
+cat("\n--- Smoke x Vape (all 11–24) ---\n")
 print(with(syn, table(smoke_now, vape_now, useNA = "ifany")))
 
 # ---- 7) Save ------------------------------------------------------------------
 saveRDS(syn, out_path)
+
+
+head(syn)

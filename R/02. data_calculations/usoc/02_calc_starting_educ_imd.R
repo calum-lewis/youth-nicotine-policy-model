@@ -14,13 +14,13 @@ usoc_path <- "U:/Modelling/R Project/data/data_clean/usoc_lmno_panel_with_imd.rd
 
 usoc <- readRDS(usoc_path)
 
-# ---- Restrict to ages 16–17 and england (to match HSE) ---------------------------------------------------
-usoc_16_17_eng <- usoc %>%
-  filter(age %in% c(16, 17)) %>%
+# ---- Restrict to ages 16–24 and england (to match HSE) ---------------------------------------------------
+usoc_16_24_eng <- usoc %>%
+  filter(age %in% c(16, 17, 18, 19, 20, 21, 22, 23, 24, 24)) %>%
   filter(country %in% c('England'))
 
 # ---- Define education/training as main activity -------------------------------
-usoc_16_17_eng <- usoc_16_17_eng %>%
+usoc_16_24_eng <- usoc_16_24_eng %>%
   mutate(
     in_ft_education_or_training_main = case_when(
       jbstat %in% c("Full-time student", "On apprenticeship", "Govt training scheme") ~ 1L,
@@ -45,11 +45,10 @@ usoc_16_17_eng <- usoc_16_17_eng %>%
 
 # ---- Estimate proportions --------------------------------
 # count educ status across waves
-# ---- Education: starting distribution (England, ages 16–17) ----
 
-edu_start <- usoc_16_17_eng %>%
-  filter(age %in% c(16, 17),
-         !is.na(in_ft_education_or_training_main)) %>%
+
+edu_start <- usoc_16_24_eng %>%
+  filter(!is.na(in_ft_education_or_training_main)) %>%
   count(age, in_ft_education_or_training_main) %>%
   group_by(age) %>%
   mutate(
@@ -59,11 +58,11 @@ edu_start <- usoc_16_17_eng %>%
 
 print(edu_start)
 
------------------------------------------------------
+
   
   # ---- IMD: starting distribution (England, pooled across waves) ----
 
-imd_start <- usoc_16_17_eng %>%
+imd_start <- usoc_16_24_eng %>%
   filter(imd2019qe_dv %in% 1:5) %>%
   count(imd2019qe_dv) %>%
   mutate(
@@ -75,6 +74,6 @@ print(imd_start)
 
 
 # ---- Save the tables to act as starting pop characteristics ------------------------------------------------------------
-saveRDS(edu_start, "U:/Modelling/R Project/data/data_params/edu_start_eng_16_17.rds")
+saveRDS(edu_start, "U:/Modelling/R Project/data/data_params/edu_start_eng_16_24.rds")
 
-saveRDS(imd_start, "U:/Modelling/R Project/data/data_params/imd_start_eng_16_17.rds")
+saveRDS(imd_start, "U:/Modelling/R Project/data/data_params/imd_start_eng_16_24.rds")

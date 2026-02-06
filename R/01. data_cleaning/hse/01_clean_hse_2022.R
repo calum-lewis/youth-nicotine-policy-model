@@ -1,5 +1,5 @@
 ################################################################################
-# HSE 2022: Baseline population (ages 11–17) + key variables for modelling
+# HSE 2022: Baseline population (ages 11–24) + key variables for modelling
 ################################################################################
 
 # install.packages(c("haven", "dplyr", "janitor", "labelled", "forcats"))
@@ -26,9 +26,10 @@ hse <- hse_raw |>
 # We therefore define eligibility using AGE35G age bands.
 # Bands "11-12", "13-15", and "16-19" cover ages 11–17, but "16-19" also includes 18–19.
 # We keep the full "16-19" band here and handle any refinement downstream (02.data_calculations).
+#chabef
 
 hse_tgt <- hse |>
-  filter(age35g %in% c("11-12", "13-15", "16-19")) |>
+  filter(age35g %in% c("11-12", "13-15", "16-19", "20-24")) |>
   mutate(
     ageband_hse = fct_drop(age35g) # keep explicit label "16-19"
   )
@@ -36,24 +37,24 @@ hse_tgt <- hse |>
 # ---- 3) Select variables needed for baseline modelling --------------------------
 
 
-hse_2022_11_19_clean <- hse_tgt |>
+hse_2022_11_24_clean <- hse_tgt |>
   select(
     # Demographics / structure
     sex,
-    ageband_hse,   # explicit "11-12", "13-15", "16-19"
+    ageband_hse,   # 
     age35g,        # keep original too (optional, but helpful for traceability)
     
     # Socioeconomic status (IMD quintile)
     qimd19,
     
     # E-cigarette / vaping items (routing differs by age)
-    eciguse_19,     # adult module (primarily 16–19)
-    kecigevd_19,    # youth module (primarily 11–15)
+    eciguse_19,     # adult module 
+    kecigevd_19,    # youth module 
     ndpnow_19,      # adult nicotine products now (diagnostic)
     
     # Cigarette smoking items (routing differs by age)
-    cigevr_19,      # adult module (primarily 16–19)
-    cignow_19,      # adult module (primarily 16–19)
+    cigevr_19,      # adult module 
+    cignow_19,      # adult module 
     k_cig_reg,      # youth detailed frequency (diagnostic/granular)
     kcigregg,       # youth current smoking wording (diagnostic)
     kcigregd,       # youth ever/never summary (useful)
@@ -70,7 +71,7 @@ hse_2022_11_19_clean <- hse_tgt |>
 
 to_na_levels <- c("Refused", "Don't know", "Not applicable")
 
-hse_2022_11_19_clean <- hse_2022_11_19_clean |>
+hse_2022_11_24_clean <- hse_2022_11_24_clean |>
   mutate(
     across(
       .cols = c(
@@ -91,6 +92,6 @@ hse_2022_11_19_clean <- hse_2022_11_19_clean |>
   )
 # ---- 5) Save tidy output --------------------------------------------------------
 
-saveRDS(hse_2022_11_19_clean, "U:/Modelling/R Project/data/data_clean/hse_2022_11_19_ageband_clean.rds")
+saveRDS(hse_2022_11_24_clean, "U:/Modelling/R Project/data/data_clean/hse_2022_11_24_ageband_clean.rds")
 
 
